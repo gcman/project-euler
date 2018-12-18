@@ -7,6 +7,52 @@ def gcd(a, b):
         a, b = b % a, a
     return b
 
+def primes(n):
+    primes = []
+    sieve = [True] * (n + 1)
+    for p in range(2, n + 1):
+        if sieve[p]:
+            primes.append(p)
+            for i in range(p * p, n + 1, p):
+                sieve[i] = False
+    return primes
+
+def _try_composite(a, d, n, s):
+    if pow(a, d, n) == 1:
+        return False
+    for i in range(s):
+        if pow(a, 2**i * d, n) == n-1:
+            return False
+    return True # n  is definitely composite
+
+_known_primes = primes(int(1e4))
+def is_prime(n, _precision_for_huge_n=16):
+    if n in _known_primes or n in (0, 1):
+        return True
+    if any((n % p) == 0 for p in _known_primes):
+        return False
+    d, s = n - 1, 0
+    while not d % 2:
+        d, s = d >> 1, s + 1
+    # Returns exact according to http://primes.utm.edu/prove/prove2_3.html
+    if n < 1373653:
+        return not any(_try_composite(a, d, n, s) for a in (2, 3))
+    if n < 25326001:
+        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5))
+    if n < 118670087467:
+        if n == 3215031751:
+            return False
+        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7))
+    if n < 2152302898747:
+        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11))
+    if n < 3474749660383:
+        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13))
+    if n < 341550071728321:
+        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13, 17))
+    # otherwise
+    return not any(_try_composite(a, d, n, s)
+                   for a in _known_primes[:_precision_for_huge_n])
+
 def brent(N):
     if N % 2 == 0:
         return 2
@@ -35,52 +81,6 @@ def brent(N):
                 break
     return g
 
-def primes(n):
-    primes = []
-    sieve = [True] * (n + 1)
-    for p in range(2, n + 1):
-        if sieve[p]:
-            primes.append(p)
-            for i in range(p * p, n + 1, p):
-                sieve[i] = False
-    return primes
-
-def _try_composite(a, d, n, s):
-    if pow(a, d, n) == 1:
-        return False
-    for i in range(s):
-        if pow(a, 2**i * d, n) == n-1:
-            return False
-    return True # n  is definitely composite
-
-_known_primes = primes(int(1e6))
-def is_prime(n, _precision_for_huge_n=16):
-    if n in _known_primes or n in (0, 1):
-        return True
-    if any((n % p) == 0 for p in _known_primes):
-        return False
-    d, s = n - 1, 0
-    while not d % 2:
-        d, s = d >> 1, s + 1
-    # Returns exact according to http://primes.utm.edu/prove/prove2_3.html
-    if n < 1373653:
-        return not any(_try_composite(a, d, n, s) for a in (2, 3))
-    if n < 25326001:
-        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5))
-    if n < 118670087467:
-        if n == 3215031751:
-            return False
-        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7))
-    if n < 2152302898747:
-        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11))
-    if n < 3474749660383:
-        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13))
-    if n < 341550071728321:
-        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13, 17))
-    # otherwise
-    return not any(_try_composite(a, d, n, s)
-                   for a in _known_primes[:_precision_for_huge_n])
-
 def factors(n):
     if n == 1:
         return {0:0}
@@ -108,14 +108,29 @@ def factors(n):
         F[b] = i
     return F
 
-def ways(n):
-    ans = 1
-    for x in factors(n).values():
-        ans *= 2*x+1
-    ans = (1 + ans)//2
-    return ans
+def totient(n):
+    F = factors(n)
+    out = 1
+    for p in F:
+        out *= p-1
+        if F[p] > 1:
+            out *= p**(F[p]-1)
+    return out
+
+def hexp(a,b,m):
+    if b == 0:
+        return 1
+    elif b == 1:
+        return a%m
+    elif b == 2:
+        return pow(a,a,m)
+    if m == 1:
+        return 0
+    return pow(a,hexp(a,b-1,totient(m)),m)
 
 T = int(input())
 for _ in range(T):
-    N = int(input())
-    print(ways(N))
+    a,b,m = map(int,input().split())
+    ans = hexp(a,b,m)
+    with open("out.txt","w+") as f:
+        f.write(str(ans))
