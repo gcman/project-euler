@@ -1,11 +1,13 @@
 import random
 
+
 def gcd(a, b):
     a = abs(a)
     b = abs(b)
     while a:
         a, b = b % a, a
     return b
+
 
 def brent(N):
     if N % 2 == 0:
@@ -35,6 +37,7 @@ def brent(N):
                 break
     return g
 
+
 def primes(n):
     primes = []
     sieve = [True] * (n + 1)
@@ -45,52 +48,56 @@ def primes(n):
                 sieve[i] = False
     return primes
 
-def _try_composite(a, d, n, s):
+
+def try_composite(a, d, n, s):
     if pow(a, d, n) == 1:
         return False
     for i in range(s):
         if pow(a, 2**i * d, n) == n-1:
             return False
-    return True # n  is definitely composite
+    return True  # n is definitely composite
 
-_known_primes = primes(int(1e6))
-def is_prime(n, _precision_for_huge_n=16):
-    if n in _known_primes or n in (0, 1):
+
+known_primes = primes(int(1e6))
+
+
+def is_prime(n, precision=16):
+    if n in known_primes or n in (0, 1):
         return True
-    if any((n % p) == 0 for p in _known_primes):
+    if any((n % p) == 0 for p in known_primes):
         return False
     d, s = n - 1, 0
     while not d % 2:
         d, s = d >> 1, s + 1
-    # Returns exact according to http://primes.utm.edu/prove/prove2_3.html
     if n < 1373653:
-        return not any(_try_composite(a, d, n, s) for a in (2, 3))
+        return not any(try_composite(a, d, n, s) for a in (2, 3))
     if n < 25326001:
-        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5))
+        return not any(try_composite(a, d, n, s) for a in (2, 3, 5))
     if n < 118670087467:
         if n == 3215031751:
             return False
-        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7))
+        return not any(try_composite(a, d, n, s) for a in (2, 3, 5, 7))
     if n < 2152302898747:
-        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11))
+        return not any(try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11))
     if n < 3474749660383:
-        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13))
+        return not any(try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13))
     if n < 341550071728321:
-        return not any(_try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13, 17))
+        return not any(try_composite(a, d, n, s) for a in (2, 3, 5, 7, 11, 13, 17))
     # otherwise
-    return not any(_try_composite(a, d, n, s)
-                   for a in _known_primes[:_precision_for_huge_n])
+    return not any(try_composite(a, d, n, s)
+                   for a in known_primes[:precision])
+
 
 def factors(n):
     if n == 1:
-        return {0:0}
+        return {0: 0}
     if is_prime(n):
-        return {n:1}
+        return {n: 1}
     F = {}
-    for p in _known_primes:
-        if n%p == 0:
+    for p in known_primes:
+        if n % p == 0:
             i = 0
-            while n%p == 0:
+            while n % p == 0:
                 i += 1
                 n //= p
             F[p] = i
@@ -108,12 +115,14 @@ def factors(n):
         F[b] = i
     return F
 
+
 def ways(n):
     ans = 1
     for x in factors(n).values():
         ans *= 2*x+1
     ans = (1 + ans)//2
     return ans
+
 
 T = int(input())
 for _ in range(T):
