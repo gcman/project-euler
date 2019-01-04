@@ -1,23 +1,27 @@
 from math import log
 
-# Sieve of Eratosthenes
+
 def primes(n):
-	primes = []
-	sieve = [True] * (n + 1)
-	for p in range(2, n + 1):
-		if sieve[p]:
-			primes.append(p)
-			for i in range(p * p, n + 1, p):
-				sieve[i] = False
-	return primes
+    """Sieve of Eratosthenes"""
+    primes = []
+    sieve = [True] * (n + 1)
+    for p in range(2, n + 1):
+        if sieve[p]:
+            primes.append(p)
+            # Cross out all multiples of p
+            for i in range(p * p, n + 1, p):
+                sieve[i] = False
+                return primes
 
-# Use eq. (1) to generate more than n primes
+
 def n_primes(n):
-	upper = int(n*log(n) + n*log(log(n)))
-	return primes(upper)
+    """Generate more than n primes with eq. (1)"""
+    upper = int(n*log(n) + n*log(log(n)))
+    return primes(upper)
 
-T = int(input())
+
 P = n_primes(10001)
+T = int(input())
 for _ in range(T):
-	N = int(input())
-	print(P[N-1])
+    N = int(input())
+    print(P[N-1])
