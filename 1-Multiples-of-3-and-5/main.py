@@ -1,10 +1,10 @@
-# Implement eq. (1)
 def triangular(n):
+    """Implement eq. (1)"""
     return n * (n+1) // 2
 
 
-# These are the terms in eq. (3)
 def sum_under(n, m):
+    """Terms in eq. (3)"""
     return m*triangular((n-1)//m)
 
 
