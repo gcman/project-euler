@@ -14,14 +14,13 @@ def divisor_sum(n):
 
 MAX = int(1e5)
 # Precompute all amicable numbers
-AMICABLE = []
+AMICABLE = set()
 for x in range(1, MAX+1):
     friend = divisor_sum(x)
     # Check if x = d(d(x)) and x != d(x)
     if x == divisor_sum(friend) and x != friend:
         # Avoid duplicates
-        if x not in AMICABLE:
-            AMICABLE.append(x)
+        AMICABLE.add(x)
 
 T = int(input())
 for _ in range(T):

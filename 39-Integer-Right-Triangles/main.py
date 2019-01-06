@@ -12,14 +12,13 @@ def bs(arr, l, r, x):
     """Binary Search arr from index l to r for x"""
     while l <= r:
         mid = l + (r - l)//2
-        # Is N in the array?
         if arr[mid] == x:
-            return arr[mid-1]
+            return arr[mid]
         elif arr[mid] < x:
             l = mid + 1
         else:
             r = mid - 1
-            return arr[r]
+    return arr[r]
 
 
 MAX = int(5e6)

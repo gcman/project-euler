@@ -16,4 +16,4 @@ P = 1000000007
 T = int(input())
 for _ in range(T):
     N, M = map(int, input().split())
-    print(choose(N+M, min(N, M)))
+    print(choose(N+M, min(N, M), P))

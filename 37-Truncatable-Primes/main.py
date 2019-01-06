@@ -1,10 +1,6 @@
-from math import log
-
-
 def truncatable_primes(n):
     """Find truncatable prims < n"""
     S = 0
-    primes = []
     sieve = [True] * (n + 1)
     sieve[1] = False
     for p in range(2, n + 1):

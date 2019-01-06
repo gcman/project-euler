@@ -8,7 +8,7 @@ def bs(arr, l, r, x):
             l = mid + 1
         else:
             r = mid - 1
-            return r
+    return r
 
 
 def primes(n):
@@ -21,7 +21,7 @@ def primes(n):
             # Cross out all multiples of p
             for i in range(p * p, n + 1, p):
                 sieve[i] = False
-                return primes
+    return primes
 
 
 PRIMES = primes(int(2e6))

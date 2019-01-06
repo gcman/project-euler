@@ -8,7 +8,7 @@ def primes(n):
             # Cross out all multiples of p
             for i in range(p * p, n + 1, p):
                 sieve[i] = False
-                return primes
+    return primes
 
 
 # Get primes up to 41

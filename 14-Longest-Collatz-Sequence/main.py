@@ -8,7 +8,7 @@ def bs(arr, l, r, x):
             l = mid + 1
         else:
             r = mid - 1
-            return arr[r]
+    return arr[r]
 
 
 # Initialize the memoization list

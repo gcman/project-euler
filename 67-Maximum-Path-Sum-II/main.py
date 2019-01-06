@@ -1,5 +1,5 @@
 def parents(i, j):
-    """Get indices of entries adjacent to (i,j) in row j-i"""
+    """Indices of adjacent entries to (i,j) in row above"""
     out = []
     if j < i:
         out.append(j)
@@ -9,7 +9,7 @@ def parents(i, j):
 
 
 def max_sum(arr):
-    """Find maximum path sum"""
+    """Maximal path sum down triangular array"""
     # The previous rows max_sums
     parent = []
     for i, row in enumerate(arr):

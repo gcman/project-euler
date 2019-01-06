@@ -11,7 +11,7 @@ def bs(arr, l, r, x):
             l = mid + 1
         else:
             r = mid - 1
-            return r
+    return r
 
 
 def gcd(a, b):

@@ -3,9 +3,9 @@ def parents(i, j):
     out = []
     if j < i:
         out.append(j)
-        if 0 < j:
-            out.append(j-1)
-        return out
+    if 0 < j:
+        out.append(j-1)
+    return out
 
 
 def max_sum(arr):
