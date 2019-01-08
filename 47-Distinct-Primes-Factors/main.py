@@ -7,9 +7,6 @@ def omega(n):
                 sieve[i] += 1
     return sieve
 
-# Find all consec. sets of size k
-# k distinct prime factors each
-
 
 def consecutive(n, k):
     """Find all consec. sets of size k where
