@@ -1,7 +1,10 @@
 from math import log
 
+# Sort pairs by value of a^b
 N = int(input())
-exp = [tuple(map(int,input().split())) for _ in range(N)]
-exp = sorted(exp,key = lambda x: x[1]*log(x[0]))
+pairs = [tuple(map(int, input().split())) for _ in range(N)]
+pairs.sort(key=lambda x: x[1]*log(x[0]))
+
+# Get K-th smallest value
 K = int(input())
-print(exp[K-1][0],exp[K-1][1])
+print(*pairs[K-1])
