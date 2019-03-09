@@ -1,49 +1,41 @@
-def egcd(a, b):
-    """Extended Euclidean Algorithm"""
-    if a == 0:
-        return (b, 0, 1)
-    else:
-        g, y, x = egcd(b % a, a)
-        return (g, x - (b // a) * y, y)
-
-
-def modinv(a, m):
-    """Multiplicative inverse of a mod m"""
-    g, x, y = egcd(a, m)
-    if g != 1:
-        raise Exception('Modular inverse does not exist!')
-    else:
-        return x % m
-
-
-def prod(arr, M):
+def prod(arr, m):
+    """Multiply an array mod m"""
     out = 1
     for x in arr:
-        out = out * x % M
+        out = out * x % m
     return out
 
 
-def P(x, M):
-    """Evaluate P at x mod M"""
+def P(coeffs, x, m):
+    """Evaluate P (given by its coefficients) at x mod m"""
     out = 0
     for i, coeff in enumerate(coeffs):
-        out = (out + coeff*pow(x, i, M)) % M
+        out = (out + coeff*pow(x, i, m)) % m
     return out
 
 
-def lagrange(x, n, M):
-    out = 0
-    for i in range(n):
-        nums = [(x-j-1) for j in range(n) if i != j]
-        dens = [(i-j) for j in range(n) if i != j]
-        out = (out + seq[i]*prod(nums, M)*modinv(prod(dens, M), M)) % M
-    return out % M
+def next_row(row, m):
+    """Given a row of Pascal's triangle, gives the next mod m"""
+    out = [(row[i] + row[i+1]) % m for i in range(len(row)-1)]
+    return [1] + out + [1]
+
+
+def fit(N, m):
+    """Implement eq. (8) to find the first N FITs"""
+    curr_row = [1]
+    FIT = []
+    for n in range(1, N+1):
+        # this is L_n from eq. (8)
+        curr_row = next_row(curr_row, m)
+        next_fit = sum([pow(-1, (n-i) % 2)*curr_row[i-1]*seq[i-1]
+                        for i in range(1, n+1)]) % m
+        FIT.append(next_fit)
+    return FIT
 
 
 MOD = 1000000007
 N = int(input())
-coeffs = [x % MOD for x in list(map(int, input().split()))]
-seq = [P(i+1, MOD) for i, x in enumerate(coeffs)]
+COEFFS = [x % MOD for x in list(map(int, input().split()))]
+seq = [P(i+1, MOD) for i, x in enumerate(COEFFS)]
 
-S = [lagrange(n+1, n, MOD) for n in range(1, N+1)]
-print(*S)
+print(*fit(N, MOD))
